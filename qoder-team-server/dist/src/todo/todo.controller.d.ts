@@ -1,0 +1,77 @@
+import { TodoService } from './todo.service';
+export declare class TodoController {
+    private todo;
+    constructor(todo: TodoService);
+    list(teamId?: string, projectId?: string): Promise<{
+        id: string;
+        projectId: string | null;
+        teamId: string | null;
+        title: string;
+        assignee: string;
+        priority: string;
+        status: string;
+        due: string;
+        type: string;
+        background: string | null;
+        materials: string[];
+        actions: string[];
+        agent: string | null;
+        agentIcon: string | null;
+        progress: string | null;
+        createdAt: Date;
+    }[]>;
+    create(dto: any): Promise<{
+        id: string;
+        projectId: string | null;
+        teamId: string | null;
+        title: string;
+        assignee: string;
+        priority: string;
+        status: string;
+        due: string;
+        type: string;
+        background: string | null;
+        materials: string[];
+        actions: string[];
+        agent: string | null;
+        agentIcon: string | null;
+        progress: string | null;
+        createdAt: Date;
+    }>;
+    update(id: string, dto: any): Promise<{
+        id: string;
+        projectId: string | null;
+        teamId: string | null;
+        title: string;
+        assignee: string;
+        priority: string;
+        status: string;
+        due: string;
+        type: string;
+        background: string | null;
+        materials: string[];
+        actions: string[];
+        agent: string | null;
+        agentIcon: string | null;
+        progress: string | null;
+        createdAt: Date;
+    }>;
+    remove(id: string): Promise<{
+        id: string;
+        projectId: string | null;
+        teamId: string | null;
+        title: string;
+        assignee: string;
+        priority: string;
+        status: string;
+        due: string;
+        type: string;
+        background: string | null;
+        materials: string[];
+        actions: string[];
+        agent: string | null;
+        agentIcon: string | null;
+        progress: string | null;
+        createdAt: Date;
+    }>;
+}

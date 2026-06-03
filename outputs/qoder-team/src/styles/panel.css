@@ -1,0 +1,320 @@
+/* ============================================
+   Right Panel
+   ============================================ */
+
+.ide-right-panel {
+  width: var(--right-panel-w);
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.rp-section {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.rp-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 10px;
+}
+
+.rp-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 12px;
+}
+
+.rp-label { color: var(--text-tertiary); }
+.rp-value { color: var(--text-primary); font-weight: 500; }
+
+.rp-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.rp-stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.rp-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.rp-commit { padding: 8px 0; }
+.rp-commit + .rp-commit { border-top: 1px solid var(--border-light); }
+
+.rp-commit-msg {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rp-commit-meta {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+/* 成员 */
+.rp-member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.rp-member + .rp-member { border-top: 1px solid var(--border-light); }
+
+.rp-member-info { flex: 1; min-width: 0; }
+
+.rp-member-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.rp-member-role {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.rp-member-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rp-member-status.online { background: var(--green); }
+.rp-member-status.offline { background: var(--text-tertiary); }
+
+/* Agent 状态卡片 */
+.rp-agent-card {
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.rp-agent-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.rp-agent-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rp-agent-card-icon { font-size: 18px; flex-shrink: 0; }
+
+.rp-agent-card-meta { flex: 1; min-width: 0; }
+
+.rp-agent-card-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.rp-agent-card-role {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.rp-agent-card-body {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+}
+
+.rp-agent-doing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.rp-doing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  animation: pulseStep 2s infinite;
+}
+
+.rp-doing-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-agent-output {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.rp-output-icon { font-size: 12px; flex-shrink: 0; }
+
+.rp-output-name {
+  color: var(--accent);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-output-time {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.rp-agent-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rp-agent-dot.online { background: var(--green); }
+.rp-agent-dot.offline { background: var(--text-tertiary); }
+
+/* 待确认卡片 */
+.rp-pending-rich {
+  background: var(--orange-light);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.rp-pending-rich:hover {
+  border-color: var(--orange);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.rp-pending-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.rp-pending-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.rp-pending-arrow {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.rp-pending-rich:hover .rp-pending-arrow { opacity: 1; }
+
+.rp-pending-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.rp-pending-context {
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(255, 193, 7, 0.12);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #f5a623;
+}
+
+.rp-pending-context-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #b45309;
+  margin-bottom: 2px;
+}
+
+.rp-pending-context-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.rp-pending-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.rp-pending-jump {
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.rp-pending-assigner {
+  font-size: 10px;
+  color: var(--accent);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* 可收起标题 */
+.rp-title-collapsible {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s ease;
+}
+
+.rp-title-collapsible:hover { color: var(--text-primary); }
+
+.rp-collapse-arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+  color: var(--text-tertiary);
+}
+
+.rp-collapse-arrow.expanded { transform: rotate(90deg); }
+
+.rp-red-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+  margin-left: 4px;
+  animation: pulseRedDot 2s infinite;
+}

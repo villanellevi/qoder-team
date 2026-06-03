@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qoder Team - 团队版 Demo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #0a0a0f;
+    --surface: #141420;
+    --surface2: #1c1c2e;
+    --border: #2a2a3e;
+    --text: #e4e4f0;
+    --text2: #8888a8;
+    --accent: #6c5ce7;
+    --accent2: #a29bfe;
+    --green: #00b894;
+    --orange: #fdcb6e;
+    --red: #e17055;
+    --blue: #74b9ff;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Layout */
+  .app { display: flex; height: 100vh; }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+    flex-shrink: 0;
+  }
+  
+  .sidebar-logo {
+    padding: 0 16px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  
+  .sidebar-logo h1 {
+    font-size: 18px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .sidebar-logo .sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  
+  .nav-section {
+    padding: 8px 12px 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text2);
+    transition: all 0.15s;
+    border-radius: 6px;
+    margin: 1px 8px;
+  }
+  
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--accent); color: white; }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  
+  .nav-item .badge {
+    margin-left: auto;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  
+  /* Top bar */
+  .topbar {
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  
+  .topbar-title { font-size: 15px; font-weight: 600; }
+  
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+  
+  .avatar-stack { display: flex; }
+  .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: white;
+    margin-left: -6px; border: 2px solid var(--surface);
+  }
+  .avatar:first-child { margin-left: 0; }
+  .avatar.av1 { background: var(--accent); }
+  .avatar.av2 { background: var(--green); }
+  .avatar.av3 { background: var(--orange); color: #333; }
+  .avatar.av4 { background: var(--blue); }
+
+  .btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+  .btn-green { background: var(--green); color: white; }
+  .btn-orange { background: var(--orange); color: #333; }
+  .btn-red { background: var(--red); color: white; }
+  .btn-sm { padding: 4px 10px; font-size: 11px; }
+
+  /* Content */
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
+  
+  /* Page visibility */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .card-title { font-size: 14px; font-weight: 600; }
+  .card-subtitle { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+
+  /* Stat cards */
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  
+  .stat-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.3px; }
+  .stat-value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  .stat-change { font-size: 11px; margin-top: 4px; }
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+
+  /* File tree */
+  .file-tree { font-size: 13px; }
+  
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  
+  .file-item:hover { background: var(--surface2); }
+  .file-item .file-icon { font-size: 14px; width: 18px; text-align: center; }
+  .file-item .file-name { flex: 1; }
+  .file-item .file-meta { font-size: 11px; color: var(--text2); }
+
+  .folder-children { padding-left: 20px; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .tag-private { background: rgba(108,92,231,0.15); color: var(--accent2); }
+  .tag-shared { background: rgba(0,184,148,0.15); color: var(--green); }
+  .tag-pending { background: rgba(253,203,110,0.15); color: var(--orange); }
+  .tag-running { background: rgba(116,185,255,0.15); color: var(--blue); }
+  .tag-done { background: rgba(0,184,148,0.15); color: var(--green); }
+  .tag-error { background: rgba(225,112,85,0.15); color: var(--red); }
+
+  /* KB items */
+  .kb-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  
+  .kb-item:hover { border-color: var(--accent); }
+  
+  .kb-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .kb-desc { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+  .kb-meta { display: flex; gap: 12px; align-items: center; font-size: 11px; color: var(--text2); }
+  .kb-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text2); }
+
+  /* Agent chat */
+  .agent-chat {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--accent);
+  }
+  
+  .agent-chat.agent-fe { border-left-color: var(--blue); }
+  .agent-chat.agent-be { border-left-color: var(--green); }
+  .agent-chat.agent-algo { border-left-color: var(--orange); }
+  .agent-chat.agent-pm { border-left-color: var(--accent); }
+  
+  .agent-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  
+  .agent-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: white;
+  }
+  .agent-badge.fe { background: var(--blue); color: #333; }
+  .agent-badge.be { background: var(--green); }
+  .agent-badge.algo { background: var(--orange); color: #333; }
+  .agent-badge.pm { background: var(--accent); }
+  
+  .agent-time { font-size: 10px; color: var(--text2); }
+  .agent-chat-body { font-size: 12px; line-height: 1.6; }
+  .agent-chat-body code {
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 11px;
+  }
+
+  /* Agent nodes */
+  .agent-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .agent-node-icon { font-size: 28px; margin-bottom: 6px; }
+  .agent-node-name { font-size: 12px; font-weight: 600; }
+  .agent-node-status { font-size: 10px; color: var(--text2); margin-top: 4px; }
+  .agent-node.active { border-color: var(--accent); box-shadow: 0 0 12px rgba(108,92,231,0.2); }
+  .agent-node.done { border-color: var(--green); }
+
+  /* Flow arrows */
+  .flow-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    color: var(--text2);
+    font-size: 18px;
+  }
+
+  /* Deploy pipeline */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  
+  .pipeline-step {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    min-width: 140px;
+    text-align: center;
+  }
+  
+  .pipeline-step.done { border-color: var(--green); }
+  .pipeline-step.running { border-color: var(--blue); animation: pulse 1.5s infinite; }
+  .pipeline-step.error { border-color: var(--red); }
+  .pipeline-step.waiting { border-color: var(--orange); }
+  
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(116,185,255,0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(116,185,255,0); }
+  }
+  
+  .pipeline-arrow {
+    flex-shrink: 0;
+    color: var(--text2);
+    padding: 0 4px;
+    font-size: 16px;
+  }
+  
+  .pipeline-step-icon { font-size: 20px; margin-bottom: 4px; }
+  .pipeline-step-name { font-size: 11px; font-weight: 600; }
+  .pipeline-step-time { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+  /* Permission table */
+  .perm-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .perm-table th { text-align: left; padding: 8px 12px; color: var(--text2); font-weight: 500; border-bottom: 1px solid var(--border); }
+  .perm-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .perm-table tr:hover td { background: var(--surface2); }
+
+  /* Toggle */
+  .toggle {
+    width: 36px; height: 20px; background: var(--border); border-radius: 10px;
+    position: relative; cursor: pointer; transition: background 0.2s;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; border-radius: 50%; background: white;
+    transition: transform 0.2s;
+  }
+  .toggle.on::after { transform: translateX(16px); }
+
+  /* Code block */
+  .code-block {
+    background: #0d0d15;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* Demo indicator */
+  .demo-banner {
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .tab {
+    padding: 8px 16px; font-size: 12px; color: var(--text2); cursor: pointer;
+    border-bottom: 2px solid transparent; transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+
+  /* Modal overlay */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 100; align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; max-width: 480px; width: 90%;
+  }
+  .modal h3 { font-size: 16px; margin-bottom: 12px; }
+  .modal p { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+  
+  /* Search */
+  .search-box {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 12px;
+  }
+  .search-box input {
+    flex: 1; background: none; border: none; color: var(--text);
+    font-size: 12px; outline: none;
+  }
+  .search-box input::placeholder { color: var(--text2); }
+  
+  /* Activity feed */
+  .activity-item {
+    display: flex; gap: 10px; padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot {
+    width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0;
+  }
+  .activity-content { flex: 1; }
+  .activity-text { font-size: 12px; }
+  .activity-time { font-size: 10px; color: var(--text2); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h1>Qoder Team</h1>
+      <div class="sub">团队协作版 Demo</div>
+    </div>
+    
+    <div class="nav-section">工作空间</div>
+    <div class="nav-item active" onclick="showPage('workspace')">
+      <span class="icon">🏠</span> 工作台
+    </div>
+    <div class="nav-item" onclick="showPage('kb')">
+      <span class="icon">📚</span> 团队知识库
+      <span class="badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('agents')">
+      <span class="icon">🤖</span> Agent 协作
+    </div>
+    <div class="nav-item" onclick="showPage('deploy')">
+      <span class="icon">🚀</span> 部署与验证
+    </div>
+    
+    <div class="nav-section" style="margin-top: 12px;">管理</div>
+    <div class="nav-item" onclick="showPage('perm')">
+      <span class="icon">🔐</span> 权限管理
+    </div>
+    <div class="nav-item" onclick="showPage('members')">
+      <span class="icon">👥</span> 团队成员
+    </div>
+    
+    <div style="flex:1;"></div>
+    
+    <div style="padding: 12px 16px; border-top: 1px solid var(--border); margin-top: 8px;">
+      <div style="font-size: 10px; color: var(--text2); margin-bottom: 6px;">当前用户</div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="avatar av1" style="margin:0;">X</div>
+        <div>
+          <div style="font-size: 12px; font-weight: 500;">小薛</div>
+          <div style="font-size: 10px; color: var(--text2);">产品经理</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">工作台</div>
+      <div class="topbar-actions">
+        <div class="search-box" style="width: 200px;">
+          <span>🔍</span>
+          <input placeholder="搜索知识库、Agent..." />
+        </div>
+        <div class="avatar-stack">
+          <div class="avatar av1">X</div>
+          <div class="avatar av2">L</div>
+          <div class="avatar av3">W</div>
+          <div class="avatar av4">Z</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="content">
+      
+      <!-- ========== PAGE 1: 工作台 ========== -->
+      <div class="page active" id="page-workspace">
+        <div class="demo-banner">💡 面试 Demo：Qoder Team — 团队协作版原型</div>
+        
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-label">团队知识库</div>
+            <div class="stat-value">12</div>
+            <div class="stat-change up">↑ 3 本周新增</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">活跃 Agent</div>
+            <div class="stat-value">5</div>
+            <div class="stat-change up">4 个协作中</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">待确认任务</div>
+            <div class="stat-value">2</div>
+            <div class="stat-change">需要人工审批</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">部署次数</div>
+            <div class="stat-value">28</div>
+            <div class="stat-change up">↑ 95% 成功率</div>
+          </div>
+        </div>
+        
+        <div class="grid-2" style="margin-top: 16px;">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">🏠 我的空间（本地 · 私密）</div>
+                <div class="card-subtitle">仅自己可见的文件和工作区</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">+ 新建</button>
+            </div>
+            <div class="file-tree">
+              <div class="file-item">
+                <span class="file-icon">📁</span>
+                <span class="file-name">实验笔记</span>
+                <span class="tag tag-private">私密</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">📄</span>
+                <span class="file-name">需求草稿-v3.md</span>
+                <span class="file-meta">2 小时前</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">📁</span>
+                <span class="file-name">竞品分析</span>
+                <span class="file-meta">5 个文件</span>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">📄</span>
+                <span class="file-name">用户画像研究.md</span>
+                <span class="file-meta">昨天</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">👥 团队空间（共享 · 协作）</div>
+                <div class="card-subtitle">团队成员共同维护的知识库</div>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="showPage('kb')">进入知识库</button>
+            </div>
+            <div class="file-tree">
+              <div class="file-item">
+                <span class="file-icon">📁</span>
+                <span class="file-name">API 文档</span>
+                <span class="tag tag-shared">共享</span>
+              </div>
+              <div class="folder-children">
+                <div class="file-item">
+                  <span class="file-icon">📄</span>
+                  <span class="file-name">用户服务接口.md</span>
+                  <span class="file-meta">小刘 · 1小时前</span>
+                </div>
+                <div class="file-item">
+                  <span class="file-icon">📄</span>
+                  <span class="file-name">推荐算法接口.md</span>
+                  <span class="file-meta">小王 · 3小时前</span>
+                </div>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">📁</span>
+                <span class="file-name">最佳实践</span>
+                <span class="tag tag-shared">共享</span>
+              </div>
+              <div class="folder-children">
+                <div class="file-item">
+                  <span class="file-icon">📄</span>
+                  <span class="file-name">React 性能优化指南.md</span>
+                  <span class="file-meta">小赵 · 昨天</span>
+                </div>
+                <div class="file-item">
+                  <span class="file-icon">📄</span>
+                  <span class="file-name">Prompt 工程实践.md</span>
+                  <span class="file-meta">小薛 · 2天前</span>
+                </div>
+              </div>
+              <div class="file-item">
+                <span class="file-icon">📁</span>
+                <span class="file-name">代码片段库</span>
+                <span class="tag tag-shared">共享</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-top: 16px;">
+          <div class="card-header">
+            <div class="card-title">📋 团队动态</div>
+            <button class="btn btn-ghost btn-sm">查看全部</button>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background: var(--green);"></div>
+            <div class="activity-content">
+              <div class="activity-text"><b>算法 Agent</b> 自动将模型推理结果同步到团队知识库</div>
+              <div class="activity-time">15 分钟前</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background: var(--blue);"></div>
+            <div class="activity-content">
+              <div class="activity-text"><b>小刘</b> 的前端 Agent 请求与后端 Agent 对齐接口定义</div>
+              <div class="activity-time">32 分钟前</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background: var(--orange);"></div>
+            <div class="activity-content">
+              <div class="activity-text"><b>部署流水线</b> #27 等待人工确认最终性能指标</div>
+              <div class="activity-time">1 小时前</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background: var(--accent);"></div>
+            <div class="activity-content">
+              <div class="activity-text"><b>小薛</b> 更新了 PRD v2.3，产品 Agent 自动通知相关 Agent</div>
+              <div class="activity-time">2 小时前</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== PAGE 2: 团队知识库 ========== -->
+      <div class="page" id="page-kb">
+        <div class="demo-banner">📚 场景 1：多人协作维护知识库</div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div class="tabs" style="border-bottom: none; margin-bottom: 0;">
+            <div class="tab active" onclick="switchKBTab(this, 'docs')">全部文档</div>
+            <div class="tab" onclick="switchKBTab(this, 'snippets')">代码片段</div>
+            <div class="tab" onclick="switchKBTab(this, 'apis')">API 文档</div>
+            <div class="tab" onclick="switchKBTab(this, 'practices')">最佳实践</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-ghost btn-sm" onclick="showModal('ai-kb')">🤖 @Agent 整理</button>
+            <button class="btn btn-primary btn-sm" onclick="showModal('new-kb')">+ 新建文档</button>
+          </div>
+        </div>
+        
+        <div id="kb-content">
+          <div class="kb-item" onclick="showModal('kb-detail')">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div class="kb-title">推荐系统 API 接口规范 v2</div>
+              <span class="tag tag-shared">团队共享</span>
+            </div>
+            <div class="kb-desc">定义了推荐服务的 RESTful API 接口，包括数据输入、模型推理、结果缓存等核心端点</div>
+            <div class="kb-meta">
+              <div class="avatar av3" style="width: 18px; height: 18px; font-size: 8px; margin: 0;">W</div>
+              <span>小王（算法）</span>
+              <span class="dot"></span>
+              <span>更新于 3 小时前</span>
+              <span class="dot"></span>
+              <span>3 人贡献</span>
+              <span class="dot"></span>
+              <span>v2.1</span>
+            </div>
+          </div>
+          
+          <div class="kb-item" onclick="showModal('kb-detail')">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div class="kb-title">前端组件设计规范 — 表单验证模块</div>
+              <span class="tag tag-shared">团队共享</span>
+            </div>
+            <div class="kb-desc">统一的表单验证逻辑、错误提示样式、交互规范，包含 React 代码示例</div>
+            <div class="kb-meta">
+              <div class="avatar av2" style="width: 18px; height: 18px; font-size: 8px; margin: 0;">L</div>
+              <span>小刘（前端）</span>
+              <span class="dot"></span>
+              <span>更新于 1 小时前</span>
+              <span class="dot"></span>
+              <span>2 人贡献</span>
+              <span class="dot"></span>
+              <span>v1.3</span>
+            </div>
+          </div>
+          
+          <div class="kb-item" onclick="showModal('kb-detail')">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div class="kb-title">Prompt 工程最佳实践 — Agent 对话模板库</div>
+              <span class="tag tag-shared">团队共享</span>
+            </div>
+            <div class="kb-desc">整理了产品 Agent、前端 Agent、算法 Agent 常用的 Prompt 模板和优化技巧</div>
+            <div class="kb-meta">
+              <div class="avatar av1" style="width: 18px; height: 18px; font-size: 8px; margin: 0;">X</div>
+              <span>小薛（产品）</span>
+              <span class="dot"></span>
+              <span>更新于 2 天前</span>
+              <span class="dot"></span>
+              <span>4 人贡献</span>
+              <span class="dot"></span>
+              <span>v3.0</span>
+            </div>
+          </div>
+
+          <div class="kb-item">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div class="kb-title">部署流水线配置指南</div>
+              <span class="tag tag-pending">审核中</span>
+            </div>
+            <div class="kb-desc">CI/CD 流水线的标准配置，包括自动测试、灰度发布、回滚策略</div>
+            <div class="kb-meta">
+              <div class="avatar av4" style="width: 18px; height: 18px; font-size: 8px; margin: 0;">Z</div>
+              <span>小赵（工程）</span>
+              <span class="dot"></span>
+              <span>更新于 5 小时前</span>
+              <span class="dot"></span>
+              <span>1 人贡献</span>
+              <span class="dot"></span>
+              <span>v1.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== PAGE 3: Agent 协作 ========== -->
+      <div class="page" id="page-agents">
+        <div class="demo-banner">🤖 场景 2：跨角色 Agent 协作 — 产品 / 前端 / 后端 / 算法 Agent 自动沟通</div>
+        
+        <!-- Agent 拓扑 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Agent 团队拓扑</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="font-size: 11px; color: var(--text2);">项目：推荐系统重构</span>
+              <button class="btn btn-ghost btn-sm" onclick="triggerAgentCollab()">▶ 模拟协作</button>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 0;">
+            <div class="agent-node active" id="node-pm">
+              <div class="agent-node-icon">📋</div>
+              <div class="agent-node-name">产品 Agent</div>
+              <div class="agent-node-status">小薛 · 在线</div>
+            </div>
+            <div class="flow-line">→</div>
+            <div class="agent-node" id="node-fe">
+              <div class="agent-node-icon">🎨</div>
+              <div class="agent-node-name">前端 Agent</div>
+              <div class="agent-node-status">小刘 · 在线</div>
+            </div>
+            <div class="flow-line">⟷</div>
+            <div class="agent-node" id="node-be">
+              <div class="agent-node-icon">⚙️</div>
+              <div class="agent-node-name">后端 Agent</div>
+              <div class="agent-node-status">小赵 · 在线</div>
+            </div>
+            <div class="flow-line">⟷</div>
+            <div class="agent-node" id="node-algo">
+              <div class="agent-node-icon">🧠</div>
+              <div class="agent-node-name">算法 Agent</div>
+              <div class="agent-node-status">小王 · 在线</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 对话流 -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Agent 对话记录</div>
+              <div class="card-subtitle">自动协作 · 人只需确认关键决策</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <span class="tag tag-running">协作进行中</span>
+            </div>
+          </div>
+          
+          <div id="agent-chat-area">
+            <div class="agent-chat agent-pm">
+              <div class="agent-chat-header">
+                <span class="agent-badge pm">产品 Agent</span>
+                <span class="agent-time">14:32</span>
+              </div>
+              <div class="agent-chat-body">
+                产品需求已拆解完毕。推荐卡片需要展示 <code>标题</code>、<code>封面图</code>、<code>推荐理由</code>，
+                接口需要支持批量获取（单次 20 条）。@前端Agent 请确认展示方案，@后端Agent 请确认接口结构。
+              </div>
+            </div>
+            
+            <div class="agent-chat agent-fe">
+              <div class="agent-chat-header">
+                <span class="agent-badge fe">前端 Agent</span>
+                <span class="agent-time">14:33</span>
+              </div>
+              <div class="agent-chat-body">
+                收到。建议使用虚拟列表处理批量数据渲染。接口返回格式建议包含 <code>reason_html</code> 字段，
+                我可以直接渲染，减少前端拼接逻辑。@后端Agent 数据结构对齐一下。
+              </div>
+            </div>
+            
+            <div class="agent-chat agent-be">
+              <div class="agent-chat-header">
+                <span class="agent-badge be">后端 Agent</span>
+                <span class="agent-time">14:35</span>
+              </div>
+              <div class="agent-chat-body">
+                OK，接口设计如下：<code>GET /api/v2/recommend/batch?count=20</code>，返回结构包含
+                <code>title, cover_url, reason_html, score</code>。@算法Agent 模型推理延迟预估多少？需要加缓存层吗？
+              </div>
+            </div>
+            
+            <div class="agent-chat agent-algo">
+              <div class="agent-chat-header">
+                <span class="agent-badge algo">算法 Agent</span>
+                <span class="agent-time">14:37</span>
+              </div>
+              <div class="agent-chat-body">
+                当前模型推理 P99 延迟 <code>120ms</code>，批量 20 条约 <code>350ms</code>。建议加 Redis 缓存层，
+                命中率约 85%。@后端Agent 我可以把推理脚本打包好，你直接集成部署。
+              </div>
+            </div>
+
+            <div class="agent-chat agent-be">
+              <div class="agent-chat-header">
+                <span class="agent-badge be">后端 Agent</span>
+                <span class="agent-time">14:38</span>
+              </div>
+              <div class="agent-chat-body">
+                接口已生成，部署脚本已更新。@产品Agent 需要人工确认以下两点：<br>
+                1. 缓存策略（TTL = 10分钟，是否符合业务需求？）<br>
+                2. 推荐理由的 HTML 格式是否需要产品审核？<br>
+                <b style="color: var(--orange);">⏳ 等待人工确认</b>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn btn-green btn-sm" onclick="showModal('confirm-decision')">✅ 确认全部</button>
+            <button class="btn btn-orange btn-sm" onclick="showModal('confirm-decision')">✏️ 部分修改</button>
+            <button class="btn btn-ghost btn-sm">💬 补充指令</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== PAGE 4: 部署与验证 ========== -->
+      <div class="page" id="page-deploy">
+        <div class="demo-banner">🚀 场景 3：自动部署与验证 — Agent 自动完成，人工确认最终效果</div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">部署流水线 #28</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="tag tag-running">运行中</span>
+              <button class="btn btn-ghost btn-sm" onclick="triggerDeploy()">▶ 模拟部署</button>
+            </div>
+          </div>
+          
+          <div class="pipeline" id="deploy-pipeline">
+            <div class="pipeline-step done">
+              <div class="pipeline-step-icon">📝</div>
+              <div class="pipeline-step-name">代码提交</div>
+              <div class="pipeline-step-time">2 分钟前</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step done">
+              <div class="pipeline-step-icon">🔍</div>
+              <div class="pipeline-step-name">代码审查</div>
+              <div class="pipeline-step-time">AI 通过</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step done">
+              <div class="pipeline-step-icon">🧪</div>
+              <div class="pipeline-step-name">单元测试</div>
+              <div class="pipeline-step-time">142/142 通过</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step running">
+              <div class="pipeline-step-icon">🏗️</div>
+              <div class="pipeline-step-name">构建部署</div>
+              <div class="pipeline-step-time">进行中...</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step waiting">
+              <div class="pipeline-step-icon">📊</div>
+              <div class="pipeline-step-name">性能验证</div>
+              <div class="pipeline-step-time">等待中</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step waiting">
+              <div class="pipeline-step-icon">✅</div>
+              <div class="pipeline-step-name">人工确认</div>
+              <div class="pipeline-step-time">等待中</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 12px;">📊 性能指标对比</div>
+            <table class="perm-table">
+              <tr>
+                <th>指标</th>
+                <th>基线值</th>
+                <th>本次值</th>
+                <th>状态</th>
+              </tr>
+              <tr>
+                <td>API 响应 P50</td>
+                <td>45ms</td>
+                <td>38ms</td>
+                <td><span style="color: var(--green);">↑ 15%</span></td>
+              </tr>
+              <tr>
+                <td>API 响应 P99</td>
+                <td>180ms</td>
+                <td>165ms</td>
+                <td><span style="color: var(--green);">↑ 8%</span></td>
+              </tr>
+              <tr>
+                <td>缓存命中率</td>
+                <td>78%</td>
+                <td>85%</td>
+                <td><span style="color: var(--green);">↑ 7%</span></td>
+              </tr>
+              <tr>
+                <td>内存使用</td>
+                <td>512MB</td>
+                <td>540MB</td>
+                <td><span style="color: var(--orange);">↓ 5%</span></td>
+              </tr>
+              <tr>
+                <td>测试覆盖率</td>
+                <td>82%</td>
+                <td>87%</td>
+                <td><span style="color: var(--green);">↑ 5%</span></td>
+              </tr>
+            </table>
+          </div>
+          
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 12px;">🤖 Agent 部署报告</div>
+            <div style="font-size: 12px; line-height: 1.8;">
+              <p style="margin-bottom: 8px;"><b>后端 Agent</b>：已完成接口部署，所有端点返回正常。Redis 缓存层已启用，TTL=10min。</p>
+              <p style="margin-bottom: 8px;"><b>算法 Agent</b>：模型已更新到 v2.1，推理延迟符合预期（P99=118ms）。灰度流量 10% 已导入。</p>
+              <p style="margin-bottom: 12px;"><b>前端 Agent</b>：组件已更新，虚拟列表渲染正常，首屏加载时间 1.2s。</p>
+              <div style="background: var(--surface2); border-radius: 6px; padding: 12px; border-left: 3px solid var(--orange);">
+                <b style="color: var(--orange);">⚠️ 需要人工确认：</b><br>
+                <span style="font-size: 11px; color: var(--text2);">
+                  内存使用增加了 5%，算法 Agent 分析认为是模型缓存预热导致，稳定后会回落。是否接受当前指标？
+                </span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <button class="btn btn-green btn-sm" onclick="showModal('deploy-confirm')">✅ 确认发布</button>
+              <button class="btn btn-red btn-sm" onclick="showModal('deploy-rollback')">↩️ 回滚</button>
+              <button class="btn btn-ghost btn-sm">📋 查看详细日志</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 历史部署记录 -->
+        <div class="card" style="margin-top: 16px;">
+          <div class="card-title" style="margin-bottom: 12px;">历史部署记录</div>
+          <table class="perm-table">
+            <tr>
+              <th>流水线</th>
+              <th>触发者</th>
+              <th>状态</th>
+              <th>耗时</th>
+              <th>操作</th>
+            </tr>
+            <tr>
+              <td>#27</td>
+              <td>小赵</td>
+              <td><span class="tag tag-done">已发布</span></td>
+              <td>4m 23s</td>
+              <td><button class="btn btn-ghost btn-sm">查看</button></td>
+            </tr>
+            <tr>
+              <td>#26</td>
+              <td>小刘</td>
+              <td><span class="tag tag-error">回滚</span></td>
+              <td>6m 11s</td>
+              <td><button class="btn btn-ghost btn-sm">查看</button></td>
+            </tr>
+            <tr>
+              <td>#25</td>
+              <td>小薛</td>
+              <td><span class="tag tag-done">已发布</span></td>
+              <td>3m 45s</td>
+              <td><button class="btn btn-ghost btn-sm">查看</button></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========== PAGE 5: 权限管理 ========== -->
+      <div class="page" id="page-perm">
+        <div class="demo-banner">🔐 场景 4：权限与访问控制 — 本地私密 + 团队共享 + 角色权限</div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">权限模型</div>
+            <button class="btn btn-primary btn-sm">+ 新建规则</button>
+          </div>
+          
+          <div class="grid-3" style="margin-bottom: 16px;">
+            <div class="stat-card" style="border-left: 3px solid var(--accent);">
+              <div class="stat-label">本地私密</div>
+              <div style="font-size: 14px; margin-top: 6px; font-weight: 500;">🔒 仅本人可见</div>
+              <div style="font-size: 11px; color: var(--text2); margin-top: 4px;">草稿、笔记、实验数据等不公开文件</div>
+            </div>
+            <div class="stat-card" style="border-left: 3px solid var(--green);">
+              <div class="stat-label">团队共享</div>
+              <div style="font-size: 14px; margin-top: 6px; font-weight: 500;">👥 全员可读</div>
+              <div style="font-size: 11px; color: var(--text2); margin-top: 4px;">API 文档、最佳实践、代码片段等共享知识库</div>
+            </div>
+            <div class="stat-card" style="border-left: 3px solid var(--orange);">
+              <div class="stat-label">角色限制</div>
+              <div style="font-size: 14px; margin-top: 6px; font-weight: 500;">🛡️ 按角色控制</div>
+              <div style="font-size: 11px; color: var(--text2); margin-top: 4px;">部署权限、数据访问权限按角色分配</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">角色权限矩阵</div>
+          </div>
+          <table class="perm-table">
+            <tr>
+              <th>权限项</th>
+              <th>产品经理</th>
+              <th>前端工程</th>
+              <th>后端工程</th>
+              <th>算法工程</th>
+            </tr>
+            <tr>
+              <td>创建/编辑知识库文档</td>
+              <td>✅</td>
+              <td>✅</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td>查看团队共享文件</td>
+              <td>✅</td>
+              <td>✅</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td>操作生产环境部署</td>
+              <td>❌</td>
+              <td>❌</td>
+              <td>✅</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>审批部署流水线</td>
+              <td>✅</td>
+              <td>❌</td>
+              <td>✅</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>访问算法模型数据</td>
+              <td>❌</td>
+              <td>❌</td>
+              <td>✅ 只读</td>
+              <td>✅ 读写</td>
+            </tr>
+            <tr>
+              <td>管理团队成员</td>
+              <td>✅</td>
+              <td>❌</td>
+              <td>❌</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>配置 Agent 协作规则</td>
+              <td>✅</td>
+              <td>✅</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="card" style="margin-top: 16px;">
+          <div class="card-header">
+            <div class="card-title">Agent 权限控制</div>
+          </div>
+          <table class="perm-table">
+            <tr>
+              <th>Agent</th>
+              <th>可读范围</th>
+              <th>可写范围</th>
+              <th>自主操作</th>
+              <th>需人工确认</th>
+            </tr>
+            <tr>
+              <td>📋 产品 Agent</td>
+              <td>全部共享文档</td>
+              <td>知识库（PRD 类）</td>
+              <td>更新文档、通知团队</td>
+              <td>删除文档、修改权限</td>
+            </tr>
+            <tr>
+              <td>🎨 前端 Agent</td>
+              <td>API 文档、设计规范</td>
+              <td>知识库（前端类）</td>
+              <td>代码生成、组件更新</td>
+              <td>接口变更、部署触发</td>
+            </tr>
+            <tr>
+              <td>⚙️ 后端 Agent</td>
+              <td>API 文档、部署配置</td>
+              <td>知识库（后端类）</td>
+              <td>代码生成、接口部署</td>
+              <td>生产环境发布、数据变更</td>
+            </tr>
+            <tr>
+              <td>🧠 算法 Agent</td>
+              <td>模型数据、API 文档</td>
+              <td>知识库（算法类）</td>
+              <td>模型训练、脚本更新</td>
+              <td>模型上线、参数调整</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========== PAGE 6: 团队成员 ========== -->
+      <div class="page" id="page-members">
+        <div class="demo-banner">👥 团队成员管理</div>
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">团队成员（4人）</div>
+            <button class="btn btn-primary btn-sm">+ 邀请成员</button>
+          </div>
+          <table class="perm-table">
+            <tr>
+              <th>成员</th>
+              <th>角色</th>
+              <th>Agent</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div class="avatar av1" style="margin:0;">X</div>
+                  <div>
+                    <div style="font-weight: 500;">小薛</div>
+                    <div style="font-size: 10px; color: var(--text2);">xue@team.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>产品经理</td>
+              <td>📋 产品 Agent</td>
+              <td><span class="tag tag-done">在线</span></td>
+              <td><button class="btn btn-ghost btn-sm">设置</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div class="avatar av2" style="margin:0;">L</div>
+                  <div>
+                    <div style="font-weight: 500;">小刘</div>
+                    <div style="font-size: 10px; color: var(--text2);">liu@team.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>前端工程师</td>
+              <td>🎨 前端 Agent</td>
+              <td><span class="tag tag-done">在线</span></td>
+              <td><button class="btn btn-ghost btn-sm">设置</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div class="avatar av4" style="margin:0;">Z</div>
+                  <div>
+                    <div style="font-weight: 500;">小赵</div>
+                    <div style="font-size: 10px; color: var(--text2);">zhao@team.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>后端工程师</td>
+              <td>⚙️ 后端 Agent</td>
+              <td><span class="tag tag-done">在线</span></td>
+              <td><button class="btn btn-ghost btn-sm">设置</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div class="avatar av3" style="margin:0;">W</div>
+                  <div>
+                    <div style="font-weight: 500;">小王</div>
+                    <div style="font-size: 10px; color: var(--text2);">wang@team.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>算法工程师</td>
+              <td>🧠 算法 Agent</td>
+              <td><span class="tag tag-done">在线</span></td>
+              <td><button class="btn btn-ghost btn-sm">设置</button></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content" onclick="event.stopPropagation()">
+  </div>
+</div>
+
+<script>
+// Page navigation
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  
+  const page = document.getElementById('page-' + pageId);
+  if (page) page.classList.add('active');
+  
+  const titles = {
+    workspace: '工作台',
+    kb: '团队知识库',
+    agents: 'Agent 协作',
+    deploy: '部署与验证',
+    perm: '权限管理',
+    members: '团队成员'
+  };
+  document.getElementById('topbar-title').textContent = titles[pageId] || '';
+  
+  // Highlight nav
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.onclick && n.onclick.toString().includes("'" + pageId + "'")) {
+      n.classList.add('active');
+    }
+  });
+}
+
+// KB tabs
+function switchKBTab(el, tab) {
+  el.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Modal system
+const modals = {
+  'ai-kb': {
+    title: '🤖 AI 知识库整理',
+    body: `
+      <p>让 AI Agent 帮你整理和优化知识库文档：</p>
+      <div style="margin: 12px 0;">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 8px;">
+          <input type="checkbox" checked> 自动去重和合并相似文档
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 8px;">
+          <input type="checkbox" checked> 生成文档摘要和关键词
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 8px;">
+          <input type="checkbox"> 自动分类和标签化
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+          <input type="checkbox" checked> 检查文档过时内容
+        </label>
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn btn-primary" onclick="closeModal()">开始整理</button>
+      </div>
+    `
+  },
+  'new-kb': {
+    title: '+ 新建知识库文档',
+    body: `
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px;">文档标题</label>
+        <input type="text" placeholder="输入文档标题..." style="width: 100%; padding: 8px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none;">
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px;">文档类型</label>
+        <select style="width: 100%; padding: 8px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none;">
+          <option>API 文档</option>
+          <option>最佳实践</option>
+          <option>代码片段</option>
+          <option>技术笔记</option>
+          <option>会议纪要</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px;">可见范围</label>
+        <select style="width: 100%; padding: 8px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none;">
+          <option>👥 团队共享（全员可见）</option>
+          <option>🔒 仅自己可见</option>
+          <option>🛡️ 指定角色可见</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn btn-primary" onclick="closeModal()">创建</button>
+      </div>
+    `
+  },
+  'kb-detail': {
+    title: '📄 文档详情',
+    body: `
+      <div style="margin-bottom: 16px;">
+        <h4 style="font-size: 14px; margin-bottom: 4px;">推荐系统 API 接口规范 v2</h4>
+        <div style="font-size: 11px; color: var(--text2);">小王 · 3 小时前更新 · v2.1</div>
+      </div>
+      <div class="code-block">GET /api/v2/recommend/batch?count=20
+
+Response:
+{
+  "items": [
+    {
+      "title": "文章标题",
+      "cover_url": "https://...",
+      "reason_html": "推荐理由...",
+      "score": 0.95
+    }
+  ],
+  "cached": true,
+  "ttl": 600
+}</div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+        <button class="btn btn-ghost" onclick="closeModal()">关闭</button>
+        <button class="btn btn-primary" onclick="closeModal()">编辑文档</button>
+      </div>
+    `
+  },
+  'confirm-decision': {
+    title: '✅ 确认 Agent 决策',
+    body: `
+      <div style="background: var(--surface2); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+        <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">决策项 1：缓存策略</div>
+        <div style="font-size: 11px; color: var(--text2);">TTL = 10 分钟，命中率约 85%。后端 Agent 建议采用。</div>
+        <div style="display: flex; gap: 6px; margin-top: 8px;">
+          <button class="btn btn-green btn-sm">同意</button>
+          <button class="btn btn-orange btn-sm">修改</button>
+          <button class="btn btn-ghost btn-sm">拒绝</button>
+        </div>
+      </div>
+      <div style="background: var(--surface2); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+        <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">决策项 2：推荐理由格式</div>
+        <div style="font-size: 11px; color: var(--text2);">前端 Agent 建议直接返回 HTML 格式，减少前端拼接。产品确认？</div>
+        <div style="display: flex; gap: 6px; margin-top: 8px;">
+          <button class="btn btn-green btn-sm">同意</button>
+          <button class="btn btn-orange btn-sm">修改</button>
+          <button class="btn btn-ghost btn-sm">拒绝</button>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn btn-green" onclick="closeModal()">全部确认</button>
+      </div>
+    `
+  },
+  'deploy-confirm': {
+    title: '✅ 确认发布',
+    body: `
+      <p>确认将部署 #28 流水线到生产环境？</p>
+      <div style="background: var(--surface2); border-radius: 6px; padding: 12px; margin: 12px 0;">
+        <div style="font-size: 12px;">
+          <div style="margin-bottom: 4px;">✅ 142/142 测试通过</div>
+          <div style="margin-bottom: 4px;">✅ 性能指标优于基线</div>
+          <div style="margin-bottom: 4px;">⚠️ 内存增加 5%（Agent 分析：可接受）</div>
+          <div>✅ 缓存命中率 85%</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn btn-green" onclick="closeModal()">确认发布</button>
+      </div>
+    `
+  },
+  'deploy-rollback': {
+    title: '↩️ 确认回滚',
+    body: `
+      <p style="color: var(--red);">回滚将恢复到上一个稳定版本（#27）。是否确认？</p>
+      <div style="margin: 12px 0;">
+        <label style="font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px;">回滚原因（可选）</label>
+        <textarea placeholder="输入原因..." style="width: 100%; padding: 8px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none; height: 80px; resize: vertical;"></textarea>
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn btn-red" onclick="closeModal()">确认回滚</button>
+      </div>
+    `
+  }
+};
+
+function showModal(id) {
+  const modal = modals[id];
+  if (!modal) return;
+  document.getElementById('modal-content').innerHTML = `<h3>${modal.title}</h3>${modal.body}`;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+// Trigger agent collaboration animation
+function triggerAgentCollab() {
+  const nodes = ['node-pm', 'node-fe', 'node-be', 'node-algo'];
+  let i = 0;
+  nodes.forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('active', 'done');
+  });
+  
+  function activateNext() {
+    if (i < nodes.length) {
+      const el = document.getElementById(nodes[i]);
+      el.classList.add('active');
+      if (i > 0) {
+        document.getElementById(nodes[i-1]).classList.remove('active');
+        document.getElementById(nodes[i-1]).classList.add('done');
+      }
+      i++;
+      setTimeout(activateNext, 800);
+    } else {
+      document.getElementById(nodes[nodes.length - 1]).classList.remove('active');
+      document.getElementById(nodes[nodes.length - 1]).classList.add('done');
+    }
+  }
+  activateNext();
+}
+
+// Trigger deploy animation
+function triggerDeploy() {
+  const steps = document.querySelectorAll('#deploy-pipeline .pipeline-step');
+  let i = 0;
+  steps.forEach(s => { s.className = 'pipeline-step'; });
+  
+  function activateNext() {
+    if (i < steps.length) {
+      steps[i].classList.add('done');
+      if (i === steps.length - 2) {
+        steps[i].classList.remove('done');
+        steps[i].classList.add('running');
+        setTimeout(() => {
+          steps[i].classList.remove('running');
+          steps[i].classList.add('done');
+          steps[i + 1].classList.add('waiting');
+        }, 1500);
+      } else if (i < steps.length - 1) {
+        setTimeout(activateNext, 600);
+      }
+      i++;
+    }
+  }
+  activateNext();
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === '1') showPage('workspace');
+  if (e.key === '2') showPage('kb');
+  if (e.key === '3') showPage('agents');
+  if (e.key === '4') showPage('deploy');
+  if (e.key === '5') showPage('perm');
+  if (e.key === '6') showPage('members');
+});
+</script>
+
+</body>
+</html>

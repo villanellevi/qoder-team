@@ -1,0 +1,110 @@
+/* ============================================
+   Todo View
+   ============================================ */
+
+.todo-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 0 2px;
+}
+
+.todo-section-icon { font-size: 16px; }
+
+.todo-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.todo-section-count {
+  background: var(--bg-hover);
+  color: var(--text-tertiary);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.todo-human-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-human-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+
+.todo-human-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.todo-human-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.todo-human-due {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.todo-human-assignee {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.todo-human-section { margin-bottom: 10px; }
+.todo-human-section:last-child { margin-bottom: 0; }
+
+.todo-human-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 5px;
+}
+
+.todo-human-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.todo-human-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.todo-human-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.todo-action-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 3px 0;
+}
+
+.todo-action-check {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}

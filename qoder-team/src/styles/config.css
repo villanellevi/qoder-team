@@ -1,0 +1,301 @@
+/* ============================================
+   Agent Config — Assets / Skills / Permissions
+   ============================================ */
+
+/* Agent 选择条 */
+.asset-agent-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 4px;
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+}
+
+.asset-agent-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+.asset-agent-tab:hover { background: var(--bg-hover); }
+.asset-agent-tab.active {
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.asset-agent-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.asset-agent-tab:not(.active) .asset-agent-name { color: var(--text-secondary); }
+
+.asset-agent-owner {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.asset-prompt-display {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* Agent 配置头部 */
+.config-agent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.config-agent-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.config-agent-icon { font-size: 24px; }
+
+.config-agent-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.config-agent-subtitle {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.config-list-item {
+  padding: 8px 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.config-list-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.config-inline-edit { padding: 4px 0; }
+
+.config-inline-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.config-item-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.config-list-item:hover .config-item-actions { opacity: 1; }
+
+.config-icon-btn {
+  background: none;
+  border: none;
+  padding: 2px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.12s ease, background 0.12s ease;
+}
+
+.config-icon-btn:hover {
+  opacity: 1;
+  background: var(--bg-hover);
+}
+
+/* 工作流步骤 */
+.workflow-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.workflow-step {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.workflow-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.workflow-step-text {
+  font-size: 12px;
+  color: var(--text-primary);
+  padding: 4px 10px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.workflow-step-arrow {
+  margin: 0 6px;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
+/* Skill 框架 */
+.skill-framework {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.skill-role-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.skill-role-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+}
+
+.skill-role-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.skill-role-icon { font-size: 22px; flex-shrink: 0; }
+
+.skill-role-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.skill-role-title {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.skill-section { margin-bottom: 10px; }
+.skill-section:last-child { margin-bottom: 0; }
+
+.skill-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.skill-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.skill-tag.cap {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.skill-tag.auto {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.skill-tag.approval {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* 关联知识库 chip */
+.config-linked-doc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--accent);
+  border: 1px solid transparent;
+  transition: all 0.12s ease;
+}
+
+.config-linked-doc-chip:hover {
+  border-color: var(--accent);
+}
+
+.config-linked-doc-title {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.config-linked-doc-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.1s ease;
+}
+
+.config-linked-doc-remove:hover {
+  background: var(--red-light);
+  color: var(--red);
+}

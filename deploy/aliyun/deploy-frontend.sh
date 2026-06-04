@@ -6,7 +6,9 @@ set -e
 
 SERVER_IP="${1:-}"
 SERVER_USER="${2:-root}"
-FRONTEND_DIR="/Users/xuechen/.qoderwork/workspace/mpno9zj3d0fkyfsv/qoder-team"
+# 脚本位于 deploy/aliyun/，前端目录在项目根目录的 qoder-team/
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+FRONTEND_DIR="$(cd "$SCRIPT_DIR/../../qoder-team" && pwd)"
 REMOTE_DIR="/var/www/qoder-team"
 
 if [ -z "$SERVER_IP" ]; then

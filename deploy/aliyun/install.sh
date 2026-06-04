@@ -109,14 +109,9 @@ server {
     listen 80;
     server_name _;
 
-    location / {
-        root /var/www/qoder-team;
-        index index.html;
-        try_files $uri $uri/ /index.html;
-    }
-
-    location /api/ {
-        proxy_pass http://localhost:3000/;
+    # 后端 API 和 Socket.IO 代理
+    location ~ ^/(auth|teams|channels|messages|documents|projects|todos|pending|daily-reports|activities|agents|health|socket\.io)(/|$) {
+        proxy_pass http://localhost:3000$request_uri;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -125,18 +120,14 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
     }
 
-    location /socket.io/ {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 86400;
+    # 前端静态文件
+    location / {
+        root /var/www/qoder-team;
+        index index.html;
+        try_files $uri $uri/ /index.html;
     }
 }
 NGINX_EOF

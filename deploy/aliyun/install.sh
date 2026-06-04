@@ -93,7 +93,7 @@ docker compose -f docker-compose.prod.yml exec -T app npx prisma migrate deploy
 
 # 导入 seed 数据
 echo "导入演示数据..."
-docker compose -f docker-compose.prod.yml exec -T app npx tsx prisma/seed.ts || echo "Seed 已完成或跳过"
+docker compose -f docker-compose.prod.yml exec -T app npx ts-node prisma/seed.ts || echo "Seed 已完成或跳过"
 
 # 8. 配置 Nginx
 echo "[8/8] 配置 Nginx..."

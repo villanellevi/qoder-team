@@ -7,7 +7,9 @@ import ConfigView from './views/ConfigView'
 import TodoView from './views/TodoView'
 import RightPanel from './components/layout/RightPanel'
 import Login from './views/Login'
+import JoinTeam from './views/JoinTeam'
 import Workspace from './views/Workspace'
+import { api } from './api/client'
 import { TeamDataProvider, useTeamData } from './context/TeamDataContext'
 import type { SidebarTab, TeamView } from './types'
 
@@ -264,11 +266,13 @@ function DemoApp() {
   )
 }
 
-/* ===== 主应用（登录 + 工作区） ===== */
+/* ===== 主应用（登录 +  onboarding + 工作区） ===== */
 export default function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('qoder_token'))
   const [user, setUser] = useState<any>(null)
   const [mode, setMode] = useState<'workspace' | 'demo'>('workspace')
+  const [hasTeams, setHasTeams] = useState<boolean | null>(null)
+  const [onboardingChecked, setOnboardingChecked] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('qoder_user')
@@ -276,6 +280,24 @@ export default function App() {
       try { setUser(JSON.parse(saved)) } catch {}
     }
   }, [])
+
+  // 登录后检查用户是否有团队
+  useEffect(() => {
+    if (!token) {
+      setOnboardingChecked(false)
+      setHasTeams(null)
+      return
+    }
+    api.listTeams()
+      .then(teams => {
+        setHasTeams(teams.length > 0)
+        setOnboardingChecked(true)
+      })
+      .catch(() => {
+        setHasTeams(false)
+        setOnboardingChecked(true)
+      })
+  }, [token])
 
   const handleLogin = (t: string, u: any) => {
     setToken(t)
@@ -287,10 +309,17 @@ export default function App() {
     localStorage.removeItem('qoder_user')
     setToken(null)
     setUser(null)
+    setHasTeams(null)
+    setOnboardingChecked(false)
   }
 
   if (!token) {
     return <Login onLogin={handleLogin} />
+  }
+
+  // 登录后先检查是否需要加入团队
+  if (onboardingChecked && !hasTeams) {
+    return <JoinTeam onJoined={() => setHasTeams(true)} />
   }
 
   if (mode === 'demo') {

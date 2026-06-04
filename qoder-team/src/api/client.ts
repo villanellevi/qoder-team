@@ -35,6 +35,8 @@ export const api = {
   listTeams: () => fetchApi('/teams'),
   getTeam: (slug: string) => fetchApi(`/teams/${slug}`),
   getTeamMembers: (teamId: string) => fetchApi(`/teams/${teamId}/members`),
+  myInvitations: () => fetchApi('/teams/invitations/me'),
+  acceptInvitation: (code: string) => fetchApi(`/teams/invitations/${code}/accept`, { method: 'POST' }),
 
   // Channels
   listChannels: (teamId: string) => fetchApi(`/channels?teamId=${teamId}`),

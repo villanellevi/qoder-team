@@ -35,4 +35,16 @@ export class TeamController {
   members(@Param('id') teamId: string) {
     return this.team.getMembers(teamId)
   }
+
+  @Get('invitations/me')
+  @UseGuards(JwtGuard)
+  myInvitations(@CurrentUser('sub') userId: string) {
+    return this.team.getPendingInvitations(userId)
+  }
+
+  @Post('invitations/:code/accept')
+  @UseGuards(JwtGuard)
+  acceptInvitation(@Param('code') code: string, @CurrentUser('sub') userId: string) {
+    return this.team.acceptInvitation(code, userId)
+  }
 }

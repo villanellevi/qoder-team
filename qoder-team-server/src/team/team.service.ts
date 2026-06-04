@@ -44,4 +44,41 @@ export class TeamService {
     })
     return members
   }
+
+  async getPendingInvitations(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user) return []
+    return this.prisma.teamInvitation.findMany({
+      where: { email: user.email, status: 'pending' },
+      include: { team: true, inviter: { select: { id: true, name: true, email: true, avatar: true } } },
+    })
+  }
+
+  async acceptInvitation(code: string, userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user) throw new NotFoundException('User not found')
+
+    const invitation = await this.prisma.teamInvitation.findUnique({
+      where: { code },
+      include: { team: true },
+    })
+    if (!invitation) throw new NotFoundException('Invitation not found')
+    if (invitation.status !== 'pending') throw new NotFoundException('Invitation already used')
+    if (invitation.email !== user.email) throw new NotFoundException('Invitation not for this user')
+
+    await this.prisma.$transaction([
+      this.prisma.teamInvitation.update({
+        where: { code },
+        data: { status: 'accepted' },
+      }),
+      this.prisma.teamMember.create({
+        data: { teamId: invitation.teamId, userId, role: 'member' },
+      }),
+    ])
+
+    return this.prisma.team.findUnique({
+      where: { id: invitation.teamId },
+      include: { members: { include: { user: { select: { id: true, name: true, email: true, avatar: true } } } } },
+    })
+  }
 }
